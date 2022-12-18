@@ -1,4 +1,4 @@
-export default class NotesView {
+export default class ChaptersView {
     constructor(root, { onNoteSelect, onNoteAdd, onNoteEdit, onNoteDelete } = {}) {
         this.root = root;
         this.onNoteSelect = onNoteSelect;
@@ -6,19 +6,19 @@ export default class NotesView {
         this.onNoteEdit = onNoteEdit;
         this.onNoteDelete = onNoteDelete;
         this.root.innerHTML = `
-            <div class="notes__sidebar">
-                <button class="notes__add" type="button">Add Note</button>
-                <div class="notes__list"></div>
+            <div class="chapters__sidebar">
+                <button class="chapters__add" type="button">Add Note</button>
+                <div class="chapters__list"></div>
             </div>
-            <div class="notes__preview">
-                <input class="notes__title" type="text" placeholder="New Note...">
-                <textarea class="notes__body">Take Note...</textarea>
+            <div class="chapters__preview">
+                <input class="chapters__title" type="text" placeholder="New Note...">
+                <textarea class="chapters__body">Take Note...</textarea>
             </div>
         `;
 
-        const btnAddNote = this.root.querySelector(".notes__add");
-        const inpTitle = this.root.querySelector(".notes__title");
-        const inpBody = this.root.querySelector(".notes__body");
+        const btnAddNote = this.root.querySelector(".chapters__add");
+        const inpTitle = this.root.querySelector(".chapters__title");
+        const inpBody = this.root.querySelector(".chapters__body");
 
         btnAddNote.addEventListener("click", () => {
             this.onNoteAdd();
@@ -40,33 +40,33 @@ export default class NotesView {
         const MAX_BODY_LENGTH = 60;
 
         return `
-            <div class="notes__list-item" data-note-id="${id}">
-                <div class="notes__small-title">${title}</div>
-                <div class="notes__small-body">
+            <div class="chapters__list-item" data-note-id="${id}">
+                <div class="chapters__small-title">${title}</div>
+                <div class="chapters__small-body">
                     ${body.substring(0, MAX_BODY_LENGTH)}
                     ${body.length > MAX_BODY_LENGTH ? "..." : ""}
                 </div>
-                <div class="notes__small-updated">
+                <div class="chapters__small-updated">
                     ${updated.toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" })}
                 </div>
             </div>
         `;
     }
 
-    updateNoteList(notes) {
-        const notesListContainer = this.root.querySelector(".notes__list");
+    updateNoteList(chapters) {
+        const chaptersListContainer = this.root.querySelector(".chapters__list");
 
         // Empty list
-        notesListContainer.innerHTML = "";
+        chaptersListContainer.innerHTML = "";
 
-        for (const note of notes) {
+        for (const note of chapters) {
             const html = this._createListItemHTML(note.id, note.title, note.body, new Date(note.updated));
 
-            notesListContainer.insertAdjacentHTML("beforeend", html);
+            chaptersListContainer.insertAdjacentHTML("beforeend", html);
         }
 
         // Add select/delete events for each list item
-        notesListContainer.querySelectorAll(".notes__list-item").forEach(noteListItem => {
+        chaptersListContainer.querySelectorAll(".chapters__list-item").forEach(noteListItem => {
             noteListItem.addEventListener("click", () => {
                 this.onNoteSelect(noteListItem.dataset.noteId);
             });
@@ -82,17 +82,17 @@ export default class NotesView {
     }
 
     updateActiveNote(note) {
-        this.root.querySelector(".notes__title").value = note.title;
-        this.root.querySelector(".notes__body").value = note.body;
+        this.root.querySelector(".chapters__title").value = note.title;
+        this.root.querySelector(".chapters__body").value = note.body;
 
-        this.root.querySelectorAll(".notes__list-item").forEach(noteListItem => {
-            noteListItem.classList.remove("notes__list-item--selected");
+        this.root.querySelectorAll(".chapters__list-item").forEach(noteListItem => {
+            noteListItem.classList.remove("chapters__list-item--selected");
         });
 
-        this.root.querySelector(`.notes__list-item[data-note-id="${note.id}"]`).classList.add("notes__list-item--selected");
+        this.root.querySelector(`.chapters__list-item[data-note-id="${note.id}"]`).classList.add("chapters__list-item--selected");
     }
 
     updateNotePreviewVisibility(visible) {
-        this.root.querySelector(".notes__preview").style.visibility = visible ? "visible" : "hidden";
+        this.root.querySelector(".chapters__preview").style.visibility = visible ? "visible" : "hidden";
     }
 }
