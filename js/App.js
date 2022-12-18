@@ -1,29 +1,29 @@
-import NotesView from "./NotesView.js";
-import NotesAPI from "./NotesAPI.js";
+import ChaptersView from "./ChaptersView.js";
+import ChaptersAPI from "./ChaptersAPI.js";
 
 export default class App {
     constructor(root) {
-        this.notes = [];
+        this.chapters = [];
         this.activeNote = null;
-        this.view = new NotesView(root, this._handlers());
+        this.view = new ChaptersView(root, this._handlers());
 
-        this._refreshNotes();
+        this._refreshChapters();
     }
 
-    _refreshNotes() {
-        const notes = NotesAPI.getAllNotes();
+    _refreshChapters() {
+        const chapters = ChaptersAPI.getAllChapters();
 
-        this._setNotes(notes);
+        this._setChapters(chapters);
 
-        if (notes.length > 0) {
-            this._setActiveNote(notes[0]);
+        if (chapters.length > 0) {
+            this._setActiveNote(chapters[0]);
         }
     }
 
-    _setNotes(notes) {
-        this.notes = notes;
-        this.view.updateNoteList(notes);
-        this.view.updateNotePreviewVisibility(notes.length > 0);
+    _setChapters(chapters) {
+        this.chapters = chapters;
+        this.view.updateNoteList(chapters);
+        this.view.updateNotePreviewVisibility(chapters.length > 0);
     }
 
     _setActiveNote(note) {
@@ -34,7 +34,7 @@ export default class App {
     _handlers() {
         return {
             onNoteSelect: noteId => {
-                const selectedNote = this.notes.find(note => note.id == noteId);
+                const selectedNote = this.chapters.find(note => note.id == noteId);
                 this._setActiveNote(selectedNote);
             },
             onNoteAdd: () => {
@@ -43,21 +43,21 @@ export default class App {
                     body: "Take note..."
                 };
 
-                NotesAPI.saveNote(newNote);
-                this._refreshNotes();
+                ChaptersAPI.saveNote(newNote);
+                this._refreshChapters();
             },
             onNoteEdit: (title, body) => {
-                NotesAPI.saveNote({
+                ChaptersAPI.saveNote({
                     id: this.activeNote.id,
                     title,
                     body
                 });
 
-                this._refreshNotes();
+                this._refreshChapters();
             },
             onNoteDelete: noteId => {
-                NotesAPI.deleteNote(noteId);
-                this._refreshNotes();
+                ChaptersAPI.deleteNote(noteId);
+                this._refreshChapters();
             },
         };
     }
